@@ -12,3 +12,6 @@
 #'@export
 #'
 
+a <- function(x){
+  return(x)
+}
