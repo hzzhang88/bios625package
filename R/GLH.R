@@ -2,6 +2,8 @@
 #'
 #'General Linear Hypothesis
 #'
+#'@name GLH
+#'
 #'@param x a list of columns of covariates
 #'
 #'@param y continuous outcome
@@ -20,8 +22,7 @@
 #'square(3)
 #'
 #'@export
-#'
-#'
+
 
 
 library(Matrix)
