@@ -14,6 +14,86 @@ knitr::opts_chunk$set(
 )
 ```
 
+## First load the package
+
 ```{r setup}
 library(bios625package)
 ```
+
+# The usage of the this package
+This package is able to facilitate running **Simple linear regression**, and **Multiple linear regression**, by providing basic statistics once for all. It is also used to **predict** the **estimated outcome** based on the model, given specified regressors. Additionally, this package can test **general linear hypothesis** simultaneously. 
+
+## How to use is ?
+
+*We can solely use its coefficient estimation module to estimate the coefficients and intercepts
+```{r}
+data("mtcars")
+# Assuming we want to research the linear relationship between Miles/gallon (mpg) and severa variabls, including number of cylinder(cyl), gross horsepower(hp), rear axle ratio(drat), and weight(Wt)
+# We collect the interested columns into a list, passing this list as the argument of x. We pass outcome column as y argument into the function. We can specify whether we need the interception term.
+
+m0 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = T)
+m0
+```
+We can use the base _lm()_ function to verify our model
+```{r}
+m1 = lm(mpg~cyl+hp+drat+wt,data=mtcars)
+summary(m1)
+confint(m1)
+```
+Same results!!!
+
+* This function can also be used to predict y from a set of specified x
+```{r}
+# We pass the predict vector or matrix as the argument predict into the function
+#For example, we use the same model to predict the estimated mpg, given that cyl is 6, hp is 100, drat is 3.75, weight is 2.90. 
+# If we don't specify the intercept term in the predict, the function will help us add is automatically.
+m2 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, predict = c(6,100,3.75,2.90),intr = T)['Prediction']
+m2
+```
+* Additionally, this function can give us more flexibility to specify hypothesis and conduct general linear hypothesis.
+```{r}
+#Here, I will provide two examples
+#The first example is to test whether the coefficients of gross horsepower(beta2) and rear axle ratio (beta3) are both equals to 0.
+#In this case, we construct a contrast matrix that reflecting our hypothesis.
+m3 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, contrast = matrix(c(0,0,1,0,0,0,0,0,1,0),byrow = T,nrow =2),intr = T)["Hypothesis"]
+m3
+
+#We can verify this result by anova 
+anova(lm(mpg~cyl+hp+drat+wt,data=mtcars),lm(mpg~cyl+wt,data=mtcars))
+```
+
+```{r}
+#In the second case, I will use more flexible general general linear hypothesis
+#For example, we want to test whether the coefficient difference between gross horsepower(beta2) and rear axle ratio (beta3) is a constant 0.8.
+# In this case, the rhs will be 0.8, contrast matrix will be matrix(c(0,0,1,-1,0),byrow = T,nrow =1)
+m4 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = T,contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)["Hypothesis"]
+m4
+
+#We can verify this result by another package's function
+car::linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
+```
+Perfectly, the results by using this package matches the outcomes from base function and other established packages.
+
+Finally, I design the warning messages to reminder users of some important details.
+
+## How more effecient is this function compared to lm() and car::linearHypothesis
+```{r}
+library(bench)
+library(ggplot2)
+
+x1 = sample(20:80,10000, replace = T)
+x2 = sample(20:80,10000, replace = T)
+x3 = sample(20:80,10000, replace = T)
+y = rnorm(10000,mean = 0,sd=sqrt(10))
+benchmark_result = bench::mark(base_lm = as.vector(lm(y~x1+x2+x3)$coefficients['(Intercept)']), GLH = as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']) )
+print(benchmark_result)
+plot(benchmark_result)
+```
+As we can see, GLH function runs faster than the base lm() function, and required less allocated memory.
+
+```{r}
+benchmark_result2 = bench::mark(car = as.vector(car::linearHypothesis(model =lm(y~x1+x2+x3),hypothesis.matrix=matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=c(0,0))[2,"Pr(>F)"]), GLH = as.vector(GLH(list(x1,x2,x3),y,contrast =matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=0 ,intr = T)$Hypothesis[1,'p_value']) )
+print(benchmark_result2)
+plot(benchmark_result2)
+```
+As we can see, GLH function runs faster than the car package, and required less allocated memory when performing the same hypothesis.
