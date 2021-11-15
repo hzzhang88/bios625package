@@ -12,3 +12,8 @@ m0 = lm(Depression ~  Fatalism_centered + Sex + R_E, data= completedata )
 summary(m0)
 contrast_matrix = matrix(c(0,1,-1,0,0,0,1,-1),byrow = T, nrow = 2 )
 car::linearHypothesis(model = m0, hypothesis.matrix=contrast_matrix, rhs= c(0,0))
+
+
+x= list(completedata$Fatalism ,completedata$Age, completedata$Sex , completedata$R_E)
+y = completedata$Depression
+predict = matrix(c(1,17.456,70,1,1),1,5)
