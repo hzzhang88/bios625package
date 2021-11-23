@@ -23,7 +23,7 @@ library(bios625package)
 # The usage of the this package
 This package is able to facilitate running **Simple linear regression**, and **Multiple linear regression**, by providing basic statistics once for all. It is also used to **predict** the **estimated outcome** based on the model, given specified regressors. Additionally, this package can test **general linear hypothesis** simultaneously. 
 
-## How to use is ?
+## How to use it ?
 
 *We can solely use its coefficient estimation module to estimate the coefficients and intercepts
 ```{r}
@@ -54,7 +54,7 @@ m2
 ```{r}
 #Here, I will provide two examples
 #The first example is to test whether the coefficients of gross horsepower(beta2) and rear axle ratio (beta3) are both equals to 0.
-#In this case, we construct a contrast matrix that reflecting our hypothesis.
+#In this case, we construct a contrast matrix that reflects our hypothesis.
 m3 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, contrast = matrix(c(0,0,1,0,0,0,0,0,1,0),byrow = T,nrow =2),intr = T)["Hypothesis"]
 m3
 

@@ -62,7 +62,8 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
   conint_low = beta_hat + qt(alpha/2,(n-p))*beta_error
   conint_high = beta_hat - qt(alpha/2,(n-p))*beta_error
   coeff = cbind(beta_hat,beta_error,t_statistic,pt_statistic,conint_low,conint_high)
-  colnames(coeff) = c("Estimate","Std. Error","t value","Pr(>|t|)","Confident interval:Low","Confident interval:High" )
+  colnames(coeff) = c("Estimate","Std. Error","t value","Pr(>|t|)","Confident interval:Low",
+                      "Confident interval:High" )
   if (intr == T) {
     rownames(coeff) = c("Intercept",paste0("beta",1:(p-1)))
   } else {
@@ -80,7 +81,7 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
 
   if (!is.null(predict)) {
     if (!is.matrix(predict)){
-      warning("Automatically covert the predict into a matrix, please check whether the result is expected")
+      warning("Automatically covert the predict into a matrix,please check whether the result is expected")
       predict = matrix(predict,byrow = T,nrow = 1)
     }
     if (ncol(predict) == (p-1)){
@@ -94,7 +95,8 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
     predicted_value_error = sqrt(diag(var_predicted_value))
     predicted_value_confint_low = predicted_value +  qt(alpha/2,(n-p))*predicted_value_error
     predicted_value_confint_high = predicted_value -  qt(alpha/2,(n-p))*predicted_value_error
-    predicted_result = cbind(predicted_value,predicted_value_error,predicted_value_confint_low,predicted_value_confint_high)
+    predicted_result = cbind(predicted_value,predicted_value_error,
+                             predicted_value_confint_low,predicted_value_confint_high)
     colnames(predicted_result) = c("Estimated value","Std Error","Confint low","Confint high")
   } else {
     message("Didn't use prediction function")
@@ -128,7 +130,8 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
     message("Didn't use the general linear hypothesis function")
     Hypo_list=NULL
   }
-  return(list(coefficient = coeff,R_square = R_list,Prediction = predicted_result,Hypothesis = Hypo_list))
+  return(list(coefficient = coeff,R_square = R_list,
+              Prediction = predicted_result,Hypothesis = Hypo_list))
 }
 
 
