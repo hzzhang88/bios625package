@@ -8,7 +8,7 @@
 #'
 #'@param y continuous outcome
 #'
-#'@param intercept whether to include intercept in the model, the default is True
+#'@param intr whether to include intercept in the model, the default is True
 #'
 #'@param predict predict matrix used to estimate the outcomes, the columns numbers should be equal to number of covariates
 #'
