@@ -66,12 +66,11 @@ anova(lm(mpg~cyl+hp+drat+wt,data=mtcars),lm(mpg~cyl+wt,data=mtcars))
 #In the second case, I will use more flexible general general linear hypothesis
 #For example, we want to test whether the coefficient difference between gross horsepower(beta2) and rear axle ratio (beta3) is a constant 0.8.
 # In this case, the rhs will be 0.8, contrast matrix will be matrix(c(0,0,1,-1,0),byrow = T,nrow =1)
-library(car)
 m4 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = T,contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)["Hypothesis"]
 m4
 
 #We can verify this result by another package's function
-linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
+car::linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
 ```
 Perfectly, the results by using this package matches the outcomes from base function and other established packages.
 
