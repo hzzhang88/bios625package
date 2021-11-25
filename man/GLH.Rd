@@ -11,6 +11,8 @@ GLH(x, y, intr = TRUE, predict = NULL, contrast = NULL, rhs = 0, alpha = 0.05)
 
 \item{y}{continuous outcome}
 
+\item{intr}{whether to include intercept in the model, the default is True}
+
 \item{predict}{predict matrix used to estimate the outcomes, the columns numbers should be equal to number of covariates}
 
 \item{contrast}{contrast matrix,}
@@ -18,8 +20,6 @@ GLH(x, y, intr = TRUE, predict = NULL, contrast = NULL, rhs = 0, alpha = 0.05)
 \item{rhs}{constant matrix, the default value  is a scalar zero.}
 
 \item{alpha}{significance level, the default value is 0.05}
-
-\item{intercept}{whether to include intercept in the model, the default is True}
 }
 \value{
 The coefficients of covariates, and some basic statistics. The estimated predicted outcome based on given data.
