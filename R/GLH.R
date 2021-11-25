@@ -33,7 +33,7 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
   row_name = names(x)
   n = length(y) ### the number of observations
   if (intr == F & length(x)==1) {  #convert a vector into a matrix
-    x= as.matrix(x)
+    x= as.matrix(x,1)
   }
   if (length(x)>1) { #unlist the x, convert it into matrix
     x= matrix(unlist(x), nrow = n, ncol=length(x))
