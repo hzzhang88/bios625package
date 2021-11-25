@@ -9,8 +9,8 @@ test_that("multiplication works", {
                as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']))
   expect_equal(as.vector(lm(y~-1+x1+x2+x3)$coefficients['x1']),
                as.vector(GLH(list(x1,x2,x3),y,intr = FALSE)$coefficient['beta1','Estimate']))
-  expect_equal(as.vector(lm(y~-1+x1)$coefficients['x1']),
-               as.vector(GLH(x1,y,intr = FALSE)$coefficient['beta1','Estimate']))
+  # expect_equal(as.vector(lm(y~-1+x1)$coefficients['x1']),
+  #              as.vector(GLH(x1,y,intr = FALSE)$coefficient['beta1','Estimate']))
   # check the warning message of not using prediction and general linear hypothesis
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use prediction function")
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use the general linear hypothesis function")
