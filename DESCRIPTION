@@ -13,7 +13,8 @@ RoxygenNote: 7.1.2
 Imports: 
     bench,
     car,
-    ggplot2
+    ggplot2,
+    ggbeeswarm
 Suggests: 
     knitr,
     rmarkdown,
