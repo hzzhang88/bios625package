@@ -13,10 +13,8 @@ test_that("multiplication works", {
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use prediction function")
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use the general linear hypothesis function")
   #check if the p values are the same
-  expect_equal(as.vector(car::linearHypothesis(model =lm(y~x1+x2+x3),
-              hypothesis.matrix=matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=c(0,0))[2,"Pr(>F)"]),
-               as.vector(GLH(list(x1,x2,x3),y,
-              contrast =matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=0 ,intr = T)$Hypothesis[1,'p_value']))
+  # expect_equal(round(0.2493,3),round(as.vector(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = TRUE,
+  #                                  contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)),3))
 
   # check the warning messages
   expect_warning(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, predict = c(6,100,3.75,2.90),intr = T),
