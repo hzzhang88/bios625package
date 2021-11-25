@@ -13,14 +13,14 @@ Installation
 You can install the released version of GLH from GitHub. First, you can run the below code in your console to remove other package with overlapped name to avoid any possible bugs.
 ```{r}
 .rs.restartR()
-remove.packages("GLH")
+remove.packages("bios625package")
 ```
 
 Then you can run
 ```{r}
 install.packages('devtools')
 devtools::install_github('hzzhang88/bios625package', build_vignettes = T)
-library("GLH")
+library("bios625package")
 ```
 In order to run the packages successfully, this will automatically install some necessary packages so that users can access the vignettes!
 
@@ -34,7 +34,7 @@ These are basic example which shows you how to solve a common problem and illust
 
 ```{r example}
 data("mtcars")
-library(GLH)
+library(bios625package)
 m0 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = T)
 
 m2 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, predict = c(6,100,3.75,2.90),intr = T)['Prediction']
@@ -47,6 +47,6 @@ m4 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, in
 
 For more detailed examples or for more information, please use
 ```{r}
-browseVignettes(package = 'GLH')
+browseVignettes(package = 'bios625package')
 ```
 and click HTML to see more complex examples and how to use these functions in a more complete way. 
