@@ -30,6 +30,6 @@ General Linear Hypothesis
 }
 \examples{
 data(mtcars)
-ma = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = T)
-mb = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = T,contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)
+ma = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = TRUE)
+mb = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = TRUE,contrast = matrix(c(0,0,1,-1,0),byrow = TRUE,nrow =1),rhs = 0.8)
 }

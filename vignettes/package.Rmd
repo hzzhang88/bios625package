@@ -71,7 +71,7 @@ m4 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, in
 m4
 
 #We can verify this result by another package's function
-car::linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
+linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
 ```
 Perfectly, the results by using this package matches the outcomes from base function and other established packages.
 

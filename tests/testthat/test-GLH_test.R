@@ -4,6 +4,7 @@ test_that("multiplication works", {
   x3 = sample(20:80,10000, replace = T)
   y = rnorm(10000,mean = 0,sd=sqrt(10))
   data("mtcars")
+  library(car)
   # check if the coefficient are the same
   expect_equal(as.vector(lm(y~x1+x2+x3)$coefficients['(Intercept)']),
                as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']))
@@ -34,11 +35,5 @@ test_that("multiplication works", {
   #
   expect_error(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = T,contrast = matrix(c(1,-1,0),byrow = T,nrow =1),rhs = 0.8),
                "The contrast matrix does not match the correct dimmensions")
-
-
-
-
-
-
 
 })

@@ -23,16 +23,12 @@
 #'
 #'@examples
 #'data(mtcars)
-#'ma = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = T)
-#'mb = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = T,contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)
+#'ma = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg,intr = TRUE)
+#'mb = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = TRUE,contrast = matrix(c(0,0,1,-1,0),byrow = TRUE,nrow =1),rhs = 0.8)
 #'@export
 
 
 GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha = 0.05){
-  if (!require("Matrix",character.only = T)) {
-    install.packages("Matrix")
-  }
-  library("Matrix") ##used to calculate the rank of matrix
   y = as.matrix(y)
   row_name = names(x)
   n = length(y) ### the number of observations
@@ -115,7 +111,7 @@ GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha =
     } else if (ncol(contrast) != p & ncol(contrast) != p-1) {
       stop("The contrast matrix does not match the correct dimmensions")
     }
-    rank = rankMatrix(contrast)[[1]]# calculate the rank of contrast matrix
+    rank = min(dim(contrast)[1],dim(contrast)[2])# calculate the rank of contrast matrix
     if (length(rhs) == 1){
       rhs = as.matrix(rep(rhs,nrow(contrast)))
     } else {
