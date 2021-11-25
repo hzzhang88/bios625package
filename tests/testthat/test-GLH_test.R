@@ -4,7 +4,6 @@ test_that("multiplication works", {
   x3 = sample(20:80,10000, replace = T)
   y = rnorm(10000,mean = 0,sd=sqrt(10))
   data("mtcars")
-  library('car')
   # check if the coefficient are the same
   expect_equal(as.vector(lm(y~x1+x2+x3)$coefficients['(Intercept)']),
                as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']))
@@ -13,8 +12,8 @@ test_that("multiplication works", {
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use prediction function")
   expect_message(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate'],"Didn't use the general linear hypothesis function")
   #check if the p values are the same
-  # expect_equal(round(0.2493,3),round(as.vector(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = TRUE,
-  #                                  contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)),3))
+  expect_equal(as.vector(round(0.2493,3)),round(as.vector(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, intr = TRUE,
+                                    contrast = matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = 0.8)$Hypothesis[1,"p_value"]),3))
 
   # check the warning messages
   expect_warning(GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, predict = c(6,100,3.75,2.90),intr = T),
