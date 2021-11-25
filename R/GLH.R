@@ -28,12 +28,11 @@
 #'@export
 
 
-if (!require("Matrix",character.only = T)) {
-  install.packages("Matrix")
-}
-library(Matrix) ##used to calculate the rank of matrix
-
 GLH <- function(x,y,intr = TRUE, predict = NULL,contrast = NULL,rhs = 0 ,alpha = 0.05){
+  if (!require("Matrix",character.only = T)) {
+    install.packages("Matrix")
+  }
+  library("Matrix") ##used to calculate the rank of matrix
   y = as.matrix(y)
   row_name = names(x)
   n = length(y) ### the number of observations
