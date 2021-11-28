@@ -20,12 +20,13 @@ knitr::opts_chunk$set(
 library(bios625package)
 ```
 
-# The usage of the this package
+## The usage of the this package
 This package is able to facilitate running **Simple linear regression**, and **Multiple linear regression**, by providing basic statistics once for all. It is also used to **predict** the **estimated outcome** based on the model, given specified regressors. Additionally, this package can test **general linear hypothesis** simultaneously. 
 
 ## How to use it ?
 
 *We can solely use its coefficient estimation module to estimate the coefficients and intercepts
+Note: I deliberately designed some messages to remind users of some details.
 ```{r}
 data("mtcars")
 # Assuming we want to research the linear relationship between Miles/gallon (mpg) and severa variabls, including number of cylinder(cyl), gross horsepower(hp), rear axle ratio(drat), and weight(Wt)
@@ -39,8 +40,10 @@ We can use the base _lm()_ function to verify our model
 m1 = lm(mpg~cyl+hp+drat+wt,data=mtcars)
 summary(m1)
 confint(m1)
+all.equal(as.vector(m0$coefficient[,"Estimate"]),as.vector(m1$coefficients))
 ```
-Same results!!!
+Exactly same results!!!
+
 
 * This function can also be used to predict y from a set of specified x
 ```{r}
@@ -59,9 +62,12 @@ m3 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, co
 m3
 
 #We can verify this result by anova 
-anova(lm(mpg~cyl+hp+drat+wt,data=mtcars),lm(mpg~cyl+wt,data=mtcars))
-```
+(anova_t = anova(lm(mpg~cyl+hp+drat+wt,data=mtcars),lm(mpg~cyl+wt,data=mtcars)))
+all.equal(as.vector(m3$Hypothesis[,"p_value"]),as.vector(anova_t[2,'Pr(>F)']))
 
+```
+Exactly same results!!!
+Note: some pop-out messages are designed to remind users, and they are not warning or errors.
 ```{r}
 #In the second case, I will use more flexible general general linear hypothesis
 #For example, we want to test whether the coefficient difference between gross horsepower(beta2) and rear axle ratio (beta3) is a constant 0.8.
@@ -71,7 +77,9 @@ m4 = GLH(x= list(mtcars$cyl,mtcars$hp,mtcars$drat,mtcars$wt), y = mtcars$mpg, in
 m4
 
 #We can verify this result by another package's function
-car::linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8))
+(car_t = car::linearHypothesis(model =lm(mpg~cyl+hp+drat+wt,data=mtcars),hypothesis.matrix= matrix(c(0,0,1,-1,0),byrow = T,nrow =1),rhs = c(0.8)))
+all.equal(as.vector(m4$Hypothesis[,"F statistic"]),as.vector(car_t[2,'F']))
+
 ```
 Perfectly, the results by using this package matches the outcomes from base function and other established packages.
 
@@ -86,14 +94,15 @@ x1 = sample(20:80,10000, replace = T)
 x2 = sample(20:80,10000, replace = T)
 x3 = sample(20:80,10000, replace = T)
 y = rnorm(10000,mean = 0,sd=sqrt(10))
-benchmark_result = bench::mark(base_lm = as.vector(lm(y~x1+x2+x3)$coefficients['(Intercept)']), GLH = as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']) )
+benchmark_result = bench::mark(base_lm = as.vector(lm(y~x1+x2+x3)$coefficients['(Intercept)']), GLH = suppressMessages(as.vector(GLH(list(x1,x2,x3),y,intr = T)$coefficient['Intercept','Estimate']) )) #suppress messages to make the output be clean
+
 print(benchmark_result)
 plot(benchmark_result)
 ```
 As we can see, GLH function runs faster than the base lm() function, and required less allocated memory.
 
 ```{r}
-benchmark_result2 = bench::mark(car = as.vector(car::linearHypothesis(model =lm(y~x1+x2+x3),hypothesis.matrix=matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=c(0,0))[2,"Pr(>F)"]), GLH = as.vector(GLH(list(x1,x2,x3),y,contrast =matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=0 ,intr = T)$Hypothesis[1,'p_value']) )
+benchmark_result2 = bench::mark(car = as.vector(car::linearHypothesis(model =lm(y~x1+x2+x3),hypothesis.matrix=matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=c(0,0))[2,"Pr(>F)"]), GLH = suppressMessages(as.vector(GLH(list(x1,x2,x3),y,contrast =matrix(c(0,1,-1,0,0,0,1,-1),byrow=T,nrow = 2),rhs=0 ,intr = T)$Hypothesis[1,'p_value']) ))#suppress messages to make the output be clean
 print(benchmark_result2)
 plot(benchmark_result2)
 ```
